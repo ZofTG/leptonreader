@@ -1,8 +1,8 @@
-# FLIRPY
+# LEPTON READER
 
-python integration for FLIR Lepton 3.5
+python integration for FLIR Lepton 3.5 with GUI
 
-## Getting started
+## GETTING READY
 
 1. Make sure to unlock the SDK dlls:
 
@@ -10,17 +10,18 @@ python integration for FLIR Lepton 3.5
    * Right click on LeptonUVC.dll and select Properties.
    * In the general tab there may be a section called "Security" at the bottom. If there is, check "Unblock" and hit apply.
    * Repeat for ManagedIR16Filters.dll.
+   *
 2. Install the dependencies:
 
 ```
 pip install -r requirements.txt
 ```
 
-3. Connect a purethermal board to your PC.
+3. Physically connect a purethermal board to your PC.
 
-## Usage
+## GET DATA
 
-### Example 1 - sensor-only
+### DIRECTLY FROM SENSOR
 
 ```
 # use only the sensor to capture some data
@@ -71,7 +72,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-### Example 2 - GUI with recording and visualization options
+### USING A GUI FRAMEWORK
 
 ```
 # imports
@@ -92,5 +93,3 @@ if __name__ == "__main__":
     camera.show()
     sys.exit(app.exec_())
 ```
-
----
