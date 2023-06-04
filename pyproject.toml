@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=67.7", "pythonnet==2.5.2", "pyqt5", "qimage2ndarray", "h5py", "opencv-python", "scipy", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leptonreader"
+version = "0.1"
+authors = [
+  { name="Luca Zoffoli", email="lzoffoli@technogym.com" },
+]
+description = "A simple application for real-time capture of thermal images with FLIR Lepton 3.5"
+readme = "README.md"
+requires-python = "==3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ZofTG/leptonreader"
+"Bug Tracker" = "https://github.com/ZofTG/leptonreader/issues"

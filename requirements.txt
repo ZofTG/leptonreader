@@ -1,7 +1,6 @@
 pythonnet==2.5.2
 PyQt5
 qimage2ndarray
-numpy
 h5py
 opencv-python
 scipy
