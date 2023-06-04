@@ -5,11 +5,11 @@ block_cipher = None
 
 
 a = Analysis(
-    ['leptonreader.py'],
+    ['app.py'],
     pathex=[],
     binaries=[],
     datas=[('leptonreader', 'leptonreader')],
-    hiddenimports=['cv2', 'PyQt5.QtCore', 'PyQt5.QtWidgets', 'PyQt5.QtGui'],
+    hiddenimports=['cv2', 'PyQt5'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
