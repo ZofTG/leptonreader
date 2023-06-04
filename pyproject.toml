@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=67.7", "pythonnet==2.5.2", "pyqt5", "qimage2ndarray", "h5py", "opencv-python", "scipy", "wheel"]
+requires = ["setuptools>=67.7", "pythonnet==2.5.2", "pyqt5", "qimage2ndarray", "h5py", "opencv-python", "scipy", "wheel", "numpy", "sip"]
 build-backend = "setuptools.build_meta"
 
 [project]

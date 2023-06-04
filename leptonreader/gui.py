@@ -24,7 +24,7 @@ __all__ = ["CameraWidget"]
 #! CONSTANTS
 
 
-FONT = qtg.QFont("Arial", 12)
+_FONT = qtg.QFont("Arial", 12)
 
 
 #! FUNCTIONS
@@ -90,7 +90,7 @@ class _RecordingWidget(qtw.QWidget):
 
         # recording time
         self.label = qtw.QLabel(self.label_format.format(0, 0, 0, 0))
-        self.label.setFont(FONT)
+        self.label.setFont(_FONT)
 
         # rec button
         rec_icon = _QIcon(REC, self._size)
@@ -190,11 +190,11 @@ class _HoverWidget(qtw.QWidget):
         n = len(self.labels)
         name_label = qtw.QLabel(name)
         name_label.setAlignment(qtc.Qt.AlignVCenter | qtc.Qt.AlignRight)
-        name_label.setFont(FONT)
+        name_label.setFont(_FONT)
         self.layout.addWidget(name_label, n, 0)
         self.labels[name] = qtw.QLabel("")
         self.labels[name].setAlignment(qtc.Qt.AlignVCenter | qtc.Qt.AlignLeft)
-        self.labels[name].setFont(FONT)
+        self.labels[name].setFont(_FONT)
         self.layout.addWidget(self.labels[name], n, 1)
         self.setLayout(self.layout)
         self.formatters[name] = lambda x: self.unit_formatter(x, unit, digits)
@@ -454,7 +454,7 @@ class CameraWidget(qtw.QWidget):
         layout.addWidget(obj)
         pane = qtw.QGroupBox(title)
         pane.setLayout(layout)
-        pane.setFont(FONT)
+        pane.setFont(_FONT)
         return pane
 
     def start(self):
@@ -536,7 +536,7 @@ class CameraWidget(qtw.QWidget):
                     msgBox = qtw.QMessageBox()
                     msgBox.setIcon(qtw.QMessageBox.Warning)
                     msgBox.setText(err)
-                    msgBox.setFont(FONT)
+                    msgBox.setFont(_FONT)
                     msgBox.setWindowTitle("ERROR")
                     msgBox.setStandardButtons(qtw.QMessageBox.Ok)
                     msgBox.exec()
@@ -549,7 +549,7 @@ class CameraWidget(qtw.QWidget):
             msgBox = qtw.QMessageBox()
             msgBox.setIcon(qtw.QMessageBox.Warning)
             msgBox.setText("NO DATA HAVE BEEN COLLECTED.")
-            msgBox.setFont(FONT)
+            msgBox.setFont(_FONT)
             msgBox.setWindowTitle("ERROR")
             msgBox.setStandardButtons(qtw.QMessageBox.Ok)
             msgBox.exec()
@@ -596,7 +596,7 @@ class CameraWidget(qtw.QWidget):
 
         # sampling frequency
         self.frequency_spinbox = qtw.QDoubleSpinBox()
-        self.frequency_spinbox.setFont(FONT)
+        self.frequency_spinbox.setFont(_FONT)
         self.frequency_spinbox.setDecimals(1)
         self.frequency_spinbox.setMinimum(1.0)
         self.frequency_spinbox.setSingleStep(0.1)
@@ -649,8 +649,8 @@ class CameraWidget(qtw.QWidget):
         self.setCentralWidget(central_widget)
 
         # status bar
-        size = FONT.pixelSize()
-        family = FONT.family()
+        size = _FONT.pixelSize()
+        family = _FONT.family()
         self.fps_label = qtw.QLabel()
         self.fps_label.setFont(qtg.QFont(family, size // 2))
         self.statusBar().addPermanentWidget(self.fps_label)

@@ -7,9 +7,9 @@
 import sys
 
 import PyQt5.QtCore as qtc
-import PyQt5.QWidgets as qtw
+import PyQt5.QtWidgets as qtw
 
-from .leptonreader import CameraWidget
+from leptonreader import CameraWidget
 
 
 #! MAIN
@@ -23,6 +23,9 @@ if __name__ == "__main__":
 
     # app generation
     app = qtw.QApplication(sys.argv)
-    camera = CameraWidget()
+    try:
+        camera = CameraWidget()
+    except Exception as exc:
+        raise RuntimeError from exc
     camera.show()
     sys.exit(app.exec_())

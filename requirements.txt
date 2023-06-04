@@ -4,4 +4,4 @@ qimage2ndarray
 h5py
 opencv-python
 scipy
-pyinstaller
+sip

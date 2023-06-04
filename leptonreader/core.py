@@ -4,15 +4,16 @@
 
 import json
 import os
+import platform
+import sys
 import threading
 import time
 from datetime import datetime
 from typing import Any, Tuple
 
+import clr  # needs the "pythonnet" package
 import h5py
 import numpy as np
-from IR16Filters import IR16Capture, NewBytesFrameEvent
-from Lepton import CCI
 from scipy.ndimage import rotate
 
 __all__ = ["TIMESTAMP_FORMAT", "read_file", "Camera"]
@@ -114,6 +115,21 @@ class Camera:
         """
         constructor
         """
+
+        # check whether python is running as 64bit or 32bit
+        # to import the right .NET dll
+        if platform.architecture()[0] == "64bit":
+            sys.path.append(os.path.sep.join([os.getcwd(), "leptonreader", "lepton_sdk_purethermal_windows10_1.0.2", "x64",]))
+        elif platform.architecture()[0] == "32bit":
+            sys.path.append(os.path.sep.join([os.getcwd(), "leptonreader", "lepton_sdk_purethermal_windows10_1.0.2", "x86",]))
+        else:
+            raise TypeError(f"the {platform.architecture()[0]} architecture is not supported.",)
+        clr.AddReference("LeptonUVC")
+        clr.AddReference("ManagedIR16Filters")
+
+        from IR16Filters import IR16Capture, NewBytesFrameEvent
+        from Lepton import CCI
+
         # find a valid device
         devices = []
         for i in CCI.GetDevices():
@@ -163,10 +179,10 @@ class Camera:
         self._reader.SetupGraphWithBytesCallback(callback)
 
         # path init
-        self._path = os.path.sep.join(__file__.split(os.path.sep)[:-4])
+        self._path = os.path.join(os.environ['USERPROFILE'], 'Desktop')
 
         # set the sampling frequency
-        self.set_sampling_frequency(8.5)
+        self.set_sampling_frequency(8)
 
         # set the rotation angle
         self.set_angle(0)
