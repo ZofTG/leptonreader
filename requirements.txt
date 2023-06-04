@@ -4,4 +4,4 @@ qimage2ndarray
 h5py
 opencv-python
 scipy
-sip
+sip==6.7.9
