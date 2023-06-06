@@ -25,6 +25,10 @@ __all__ = ["CameraWidget"]
 
 
 _FONT = qtg.QFont("Arial", 12)
+_COLORMAPS = {}
+for i, v in cv2.__dict__.items():
+    if i.startswith("COLORMAP"):
+        _COLORMAPS[i.split("_")[1]] = v
 
 
 #! FUNCTIONS
@@ -47,11 +51,6 @@ def _QIcon(path, size=40):
     icon: QIcon
         the icon.
     """
-    # check the entries
-    assert os.path.exists(path), "path must be a valid file."
-    assert isinstance(size, int), "size must be an int."
-
-    # get the icon
     qimage = qtg.QImage()
     qimage.loadFromData(qtc.QByteArray.fromBase64(path.encode("ascii")))
     pixmap = qtg.QPixmap(qimage)
@@ -67,7 +66,7 @@ def _QIcon(path, size=40):
 
 class _RecordingWidget(qtw.QWidget):
     """
-    Initialize a PySide2 widget capable showing a checkable button for
+    Initialize a widget capable showing a checkable button for
     recording things and showing the recording time.
     """
 
@@ -281,14 +280,13 @@ class _ImageWidget(qtw.QLabel):
     hover = None
     hover_offset_x_perc = None
     hover_offset_y_perc = None
-    colormap = None
+    colormap = cv2.COLORMAP_HOT
     data = None
 
     def __init__(
         self,
         hover_offset_x=0.02,
         hover_offset_y=0.02,
-        colormap=cv2.COLORMAP_JET,
     ):
         super().__init__()
         self.hover = _HoverWidget()
@@ -298,7 +296,6 @@ class _ImageWidget(qtw.QLabel):
         self.hover.setVisible(False)
         self.hover_offset_x_perc = hover_offset_x
         self.hover_offset_y_perc = hover_offset_y
-        self.colormap = colormap
         self.setMouseTracking(True)
 
     def enterEvent(self, event=None):
@@ -394,7 +391,7 @@ class _ImageWidget(qtw.QLabel):
         self._adjust_view()
 
 
-class CameraWidget(qtw.QWidget):
+class CameraWidget(qtw.QMainWindow):
     """
     Initialize a PyQt5 widget capable of communicating to
     an pure thermal device equipped with a lepton 3.5 sensor.
@@ -419,6 +416,7 @@ class CameraWidget(qtw.QWidget):
     timer = None
     zoom_spinbox = None
     frequency_spinbox = None
+    colormap_box = None
     thermal_image = None
     fps_label = None
     rotation_button = None
@@ -572,6 +570,10 @@ class CameraWidget(qtw.QWidget):
         fps = 0 if toc == tic else (1 / (toc - tic))
         self.fps_label.setText("FPS: {:0.1f}".format(fps))
 
+    def _update_colormap(self):
+        cmap = self.colormap_box.currentText()
+        self.thermal_image.colormap = _COLORMAPS[cmap]
+
     def resizeEvent(self, event=None):
         w = self.thermal_image.sizeHint().width()
         h = self.sizeHint().height()
@@ -600,8 +602,8 @@ class CameraWidget(qtw.QWidget):
         self.frequency_spinbox.setDecimals(1)
         self.frequency_spinbox.setMinimum(1.0)
         self.frequency_spinbox.setSingleStep(0.1)
-        self.frequency_spinbox.setMaximum(8.5)
-        self.frequency_spinbox.setValue(8.5)
+        self.frequency_spinbox.setMaximum(8)
+        self.frequency_spinbox.setValue(8)
         self.frequency_spinbox.valueChanged.connect(self.update_frequency)
         freq_box = self._create_box("Frequency (Hz)", self.frequency_spinbox)
 
@@ -620,6 +622,12 @@ class CameraWidget(qtw.QWidget):
         self.recording_pane.stopped.connect(self.stop_recording)
         recording_box = self._create_box("Data recording", self.recording_pane)
 
+        # colormap box
+        self.colormap_box = qtw.QComboBox()
+        self.colormap_box.addItems(list(_COLORMAPS.keys()))
+        self.colormap_box.currentIndexChanged.connect(self._update_colormap)
+        cmap_box = self._create_box("Colormap", self.colormap_box)
+
         # setup the options panel
         opt_pane = qtw.QWidget()
         opt_layout = qtw.QGridLayout()
@@ -628,6 +636,7 @@ class CameraWidget(qtw.QWidget):
         opt_layout.addWidget(freq_box, 0, 0)
         opt_layout.addWidget(rotation_box, 0, 1)
         opt_layout.addWidget(recording_box, 0, 2)
+        opt_layout.addWidget(cmap_box, 0, 3)
         opt_pane.setLayout(opt_layout)
         opt_pane.setFixedHeight(int(round(self._size * 1.5)))
 
@@ -635,7 +644,6 @@ class CameraWidget(qtw.QWidget):
         self.thermal_image = _ImageWidget(
             hover_offset_x=hover_offset_x,
             hover_offset_y=hover_offset_y,
-            colormap=colormap,
         )
 
         # widget layout
